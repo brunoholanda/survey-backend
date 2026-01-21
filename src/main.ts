@@ -19,13 +19,13 @@ async function bootstrap() {
   });
 
   app.enableCors({
-    origin: 'http://localhost:5173',
+    origin: 'http://0.0.0.0:5173',
     credentials: true,
   });
 
   const port = process.env.PORT || 3000;
   await app.listen(port);
-  console.log(`Application is running on: http://localhost:${port}`);
+  console.log(`Application is running on: http://0.0.0.0:${port}`);
 }
 bootstrap();
 
