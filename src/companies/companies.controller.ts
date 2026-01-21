@@ -19,6 +19,19 @@ import * as multer from 'multer';
 import * as path from 'path';
 import * as fs from 'fs';
 
+// Interface para o arquivo do multer
+interface MulterFile {
+  fieldname: string;
+  originalname: string;
+  encoding: string;
+  mimetype: string;
+  size: number;
+  destination: string;
+  filename: string;
+  path: string;
+  buffer: Buffer;
+}
+
 @Controller('companies')
 export class CompaniesController {
   constructor(private readonly companiesService: CompaniesService) {}
@@ -75,7 +88,7 @@ export class CompaniesController {
       },
     }),
   )
-  async uploadLogo(@Request() req, @UploadedFile() file: Express.Multer.File) {
+  async uploadLogo(@Request() req, @UploadedFile() file: MulterFile) {
     if (!file) {
       throw new BadRequestException('Nenhum arquivo enviado');
     }
