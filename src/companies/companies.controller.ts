@@ -75,7 +75,7 @@ export class CompaniesController {
       },
     }),
   )
-  async uploadLogo(@Request() req, @UploadedFile() file: multer.File) {
+  async uploadLogo(@Request() req, @UploadedFile() file: Express.Multer.File) {
     if (!file) {
       throw new BadRequestException('Nenhum arquivo enviado');
     }
