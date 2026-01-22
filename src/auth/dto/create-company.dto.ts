@@ -22,3 +22,4 @@ export class CreateCompanyDto {
   logo_path?: string;
 }
 
+
