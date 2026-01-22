@@ -14,6 +14,7 @@ import {
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CompaniesService } from './companies.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { AdminAuthGuard } from '../auth/guards/admin-auth.guard';
 import { UpdateCompanyDto } from './dto/update-company.dto';
 import * as multer from 'multer';
 import * as path from 'path';
@@ -35,6 +36,12 @@ interface MulterFile {
 @Controller('companies')
 export class CompaniesController {
   constructor(private readonly companiesService: CompaniesService) {}
+
+  @UseGuards(JwtAuthGuard, AdminAuthGuard)
+  @Get()
+  async findAll() {
+    return this.companiesService.findAll();
+  }
 
   // Endpoint público para buscar dados da empresa
   @Get('public/:id')

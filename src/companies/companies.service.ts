@@ -27,5 +27,11 @@ export class CompaniesService {
     Object.assign(company, updateData);
     return this.companyRepository.save(company);
   }
+
+  async findAll(): Promise<Company[]> {
+    return this.companyRepository.find({
+      order: { created_at: 'DESC' },
+    });
+  }
 }
 
