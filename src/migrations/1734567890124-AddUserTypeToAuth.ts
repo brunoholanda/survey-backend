@@ -41,3 +41,4 @@ export class AddUserTypeToAuth1734567890124 implements MigrationInterface {
 
 
 
+

@@ -22,7 +22,7 @@ export class FormsController {
   // Endpoint público para buscar formulários por company_id
   @Get('public/company/:companyId')
   async findPublicByCompany(@Param('companyId') companyId: string) {
-    return this.formsService.findAllByCompany(companyId);
+    return this.formsService.findPublicByCompanyId(companyId);
   }
 
   @UseGuards(JwtAuthGuard)

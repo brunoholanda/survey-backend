@@ -1,7 +1,7 @@
-import { IsString, IsNotEmpty, IsInt, IsOptional, Min, Max } from 'class-validator';
+import { IsString, IsNotEmpty, IsInt, IsOptional, Min, Max, IsUUID, MaxLength } from 'class-validator';
 
 export class CreateSatisfactionSurveyDto {
-  @IsString()
+  @IsUUID()
   @IsNotEmpty()
   form_id: string;
 
@@ -13,6 +13,7 @@ export class CreateSatisfactionSurveyDto {
 
   @IsString()
   @IsOptional()
+  @MaxLength(1000)
   text_response?: string;
 }
 

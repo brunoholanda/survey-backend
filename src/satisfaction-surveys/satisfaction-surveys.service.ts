@@ -1,6 +1,7 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { randomUUID } from 'crypto';
 import { SatisfactionSurvey } from '../entities/satisfaction-survey.entity';
 import { Form } from '../entities/form.entity';
 import { CreateSatisfactionSurveyDto } from './dto/create-satisfaction-survey.dto';
@@ -28,12 +29,55 @@ export class SatisfactionSurveysService {
     return this.surveyRepository.save(survey);
   }
 
-  async createMultiple(createMultipleSurveysDto: CreateMultipleSurveysDto): Promise<SatisfactionSurvey[]> {
-    const surveys = createMultipleSurveysDto.surveys.map((dto) =>
-      this.surveyRepository.create(dto),
+  async createMultiple(createMultipleSurveysDto: CreateMultipleSurveysDto) {
+    // Criar uma sessão única para agrupar as respostas
+    const sessionId = randomUUID();
+
+    const surveys = await Promise.all(
+      createMultipleSurveysDto.surveys.map(async (survey) => {
+        // Validar se o form existe
+        const form = await this.formRepository.findOne({
+          where: { id: survey.form_id },
+        });
+
+        if (!form) {
+          throw new NotFoundException(`Formulário ${survey.form_id} não encontrado`);
+        }
+
+        // Validar tipo de resposta
+        if (form.question_type === 'text_opinion' && !survey.text_response) {
+          throw new BadRequestException('Resposta de texto é obrigatória para este tipo de pergunta');
+        }
+
+        if (form.question_type !== 'text_opinion' && survey.scale_value === undefined) {
+          throw new BadRequestException('Valor de escala é obrigatório para este tipo de pergunta');
+        }
+
+        // Validar range de escala baseado no tipo
+        if (survey.scale_value !== undefined) {
+          if (form.question_type === 'scale_0_5' && (survey.scale_value < 0 || survey.scale_value > 5)) {
+            throw new BadRequestException('Valor de escala deve estar entre 0 e 5 para este tipo de pergunta');
+          }
+          if (form.question_type === 'scale_0_10' && (survey.scale_value < 0 || survey.scale_value > 10)) {
+            throw new BadRequestException('Valor de escala deve estar entre 0 e 10 para este tipo de pergunta');
+          }
+        }
+
+        return this.surveyRepository.save({
+          form_id: survey.form_id,
+          scale_value: survey.scale_value,
+          text_response: survey.text_response,
+          session_id: sessionId,
+        });
+      })
     );
 
-    return this.surveyRepository.save(surveys);
+    return {
+      id: sessionId,
+      session_id: sessionId,
+      created_at: new Date(),
+      surveys,
+    };
   }
 
   async findAllByForm(formId: string): Promise<SatisfactionSurvey[]> {

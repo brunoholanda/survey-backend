@@ -46,7 +46,7 @@ export class CompaniesController {
   // Endpoint público para buscar dados da empresa
   @Get('public/:id')
   async getPublicCompany(@Param('id') id: string) {
-    return this.companiesService.findOne(id);
+    return this.companiesService.findPublicById(id);
   }
 
   @UseGuards(JwtAuthGuard)

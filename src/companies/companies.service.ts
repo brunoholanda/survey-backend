@@ -33,5 +33,18 @@ export class CompaniesService {
       order: { created_at: 'DESC' },
     });
   }
+
+  async findPublicById(id: string): Promise<Partial<Company>> {
+    const company = await this.companyRepository.findOne({
+      where: { id },
+      select: ['id', 'name', 'description', 'logo_path', 'cnpj'],
+    });
+
+    if (!company) {
+      throw new NotFoundException('Empresa não encontrada');
+    }
+
+    return company;
+  }
 }
 

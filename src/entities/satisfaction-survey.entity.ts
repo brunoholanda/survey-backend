@@ -26,6 +26,9 @@ export class SatisfactionSurvey {
   @Column({ type: 'text', nullable: true })
   text_response: string;
 
+  @Column({ type: 'uuid', nullable: true })
+  session_id: string;
+
   @CreateDateColumn()
   created_at: Date;
 }

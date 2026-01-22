@@ -2,6 +2,7 @@ import { Injectable, NotFoundException, BadRequestException } from '@nestjs/comm
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Form, QuestionType } from '../entities/form.entity';
+import { Company } from '../entities/company.entity';
 import { CreateFormDto } from './dto/create-form.dto';
 import { UpdateFormDto } from './dto/update-form.dto';
 
@@ -10,6 +11,8 @@ export class FormsService {
   constructor(
     @InjectRepository(Form)
     private formRepository: Repository<Form>,
+    @InjectRepository(Company)
+    private companyRepository: Repository<Company>,
   ) {}
 
   async create(companyId: string, createFormDto: CreateFormDto): Promise<Form> {
@@ -55,6 +58,26 @@ export class FormsService {
       where: { company_id: companyId },
       order: { order: 'ASC' },
     });
+  }
+
+  async findPublicByCompanyId(companyId: string): Promise<Partial<Form>[]> {
+    // Verificar se a empresa existe
+    const company = await this.companyRepository.findOne({
+      where: { id: companyId },
+    });
+
+    if (!company) {
+      throw new NotFoundException('Empresa não encontrada');
+    }
+
+    // Buscar formulários da empresa
+    const forms = await this.formRepository.find({
+      where: { company_id: companyId },
+      order: { order: 'ASC' },
+      select: ['id', 'question', 'question_type', 'order', 'is_optional'],
+    });
+
+    return forms;
   }
 
   async findOne(id: string, companyId: string): Promise<Form> {
