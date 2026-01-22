@@ -32,3 +32,4 @@ export class SuggestionQuestion {
   updated_at: Date;
 }
 
+

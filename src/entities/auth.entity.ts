@@ -20,10 +20,13 @@ export class Auth {
   @Column({ type: 'varchar', length: 255 })
   password: string;
 
-  @Column({ type: 'uuid', unique: true })
+  @Column({ type: 'int', default: 2 })
+  user_type: number;
+
+  @Column({ type: 'uuid', unique: true, nullable: true })
   company_id: string;
 
-  @OneToOne(() => Company)
+  @OneToOne(() => Company, { nullable: true })
   @JoinColumn({ name: 'company_id' })
   company: Company;
 
