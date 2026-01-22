@@ -5,6 +5,7 @@ import { AuthModule } from './auth/auth.module';
 import { CompaniesModule } from './companies/companies.module';
 import { FormsModule } from './forms/forms.module';
 import { SatisfactionSurveysModule } from './satisfaction-surveys/satisfaction-surveys.module';
+import { SuggestionsQuestionsModule } from './suggestions-questions/suggestions-questions.module';
 import { DatabaseConfig } from './config/database.config';
 
 @Module({
@@ -20,6 +21,7 @@ import { DatabaseConfig } from './config/database.config';
     CompaniesModule,
     FormsModule,
     SatisfactionSurveysModule,
+    SuggestionsQuestionsModule,
   ],
 })
 export class AppModule {}

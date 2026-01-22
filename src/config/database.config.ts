@@ -15,6 +15,7 @@ export class DatabaseConfig implements TypeOrmOptionsFactory {
       password: this.configService.get<string>('DB_PASSWORD', 'postgres'),
       database: this.configService.get<string>('DB_DATABASE', 'pesquisa_db'),
       entities: [__dirname + '/../**/*.entity{.ts,.js}'],
+      migrations: [__dirname + '/../migrations/**/*{.ts,.js}'],
       synchronize: true, // Em produção, usar migrations
       logging: false,
     };
