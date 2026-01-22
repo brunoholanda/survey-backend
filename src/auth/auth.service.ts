@@ -8,6 +8,7 @@ import { Company } from '../entities/company.entity';
 import { RegisterDto } from './dto/register.dto';
 import { LoginDto } from './dto/login.dto';
 import { CreateUserDto } from './dto/create-user.dto';
+import { CreateCompanyDto } from './dto/create-company.dto';
 
 @Injectable()
 export class AuthService {
@@ -155,12 +156,12 @@ export class AuthService {
     };
   }
 
-  async createCompany(registerDto: RegisterDto, adminUserType: number) {
+  async createCompany(createCompanyDto: CreateCompanyDto, adminUserType: number) {
     if (adminUserType !== 1) {
       throw new UnauthorizedException('Apenas administradores podem criar empresas');
     }
 
-    const { name, description, cnpj, address, logo_path } = registerDto;
+    const { name, description, cnpj, address, logo_path } = createCompanyDto;
 
     // Verificar se o CNPJ já existe
     const existingCompany = await this.companyRepository.findOne({

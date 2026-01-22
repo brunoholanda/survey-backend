@@ -2,6 +2,7 @@ import { Controller, Post, Body, UseGuards, Request } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { RegisterDto } from './dto/register.dto';
 import { CreateUserDto } from './dto/create-user.dto';
+import { CreateCompanyDto } from './dto/create-company.dto';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { AdminAuthGuard } from './guards/admin-auth.guard';
@@ -23,8 +24,8 @@ export class AuthController {
 
   @UseGuards(JwtAuthGuard, AdminAuthGuard)
   @Post('admin/create-company')
-  async createCompany(@Request() req, @Body() registerDto: RegisterDto) {
-    return this.authService.createCompany(registerDto, req.user.user_type);
+  async createCompany(@Request() req, @Body() createCompanyDto: CreateCompanyDto) {
+    return this.authService.createCompany(createCompanyDto, req.user.user_type);
   }
 
   @UseGuards(JwtAuthGuard, AdminAuthGuard)
